@@ -1,0 +1,4 @@
+# for bash:
+pip install fastapi[all] sqlmodel sqlalchemy[asyncio] asyncpg
+# for zsh:
+uv pip install "fastapi[all]" sqlmodel "sqlalchemy[asyncio]" asyncpg
