@@ -27,3 +27,19 @@ class CategoryRead(BaseModel):
     id: int
     name: str
     color_code: str
+    
+    class Config:
+        from_attributes = True
+    
+class MessageCreate(BaseModel):
+    session_id: uuid.UUID
+    content: str
+
+class MessageRead(BaseModel):
+    id: uuid.UUID
+    role: str
+    content: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
