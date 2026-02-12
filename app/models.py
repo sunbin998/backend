@@ -119,8 +119,8 @@ class Document(SQLModel, table=True):
         sa_column=Column("metadata", JSONB) # 数据库里叫 metadata，Python 里为了避开关键字用 metadata_
     )
     
-    # 向量索引
+    # 向量索引 (1024 维，匹配 DashScope text-embedding-v3)
     embedding: Optional[List[float]] = Field(
         default=None,
-        sa_column=Column(Vector(1536))
+        sa_column=Column(Vector(1024))
     )
