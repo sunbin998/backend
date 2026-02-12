@@ -8,3 +8,34 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Environment variables and sensitive files
+.env
+.env.*
+*.env
+.env.local
+.env.production
+.env.development
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Lock files (if using package managers)
+uv.lock
