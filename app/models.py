@@ -83,10 +83,14 @@ class Message(SQLModel, table=True):
     
     # 消息的具体文本内容
     content: str
+
+    # RAG 参考来源（仅 assistant 消息有值）
+    sources: Optional[List[Dict[str, Any]]] = Field(
+        default=None,
+        sa_column=Column("sources", JSONB)
+    )
     
-    # 【核心修正】Embedding 向量字段
-    # 使用 pgvector 的 Vector 类型，维度 1536 (对应 OpenAI text-embedding-3-small)
-    # 注意：在没有安装 vector 扩展的库里这会报错，但我们已经在 requirement 里装了
+    # Embedding 向量字段
     embedding: Optional[List[float]] = Field(
         default=None,
         sa_column=Column(Vector(1536))
@@ -123,4 +127,42 @@ class Document(SQLModel, table=True):
     embedding: Optional[List[float]] = Field(
         default=None,
         sa_column=Column(Vector(1024))
+    )
+
+
+# ==========================================
+# 5. 日记模型 (DiaryEntry)
+# ==========================================
+class DiaryEntry(SQLModel, table=True):
+    __tablename__ = "diary_entries"
+
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+
+    # 日期（唯一，每天只能一篇日记）
+    date: str = Field(unique=True, index=True, max_length=10)  # 格式: "2026-02-14"
+
+    # 日记正文
+    content: str
+
+    # 心情标签（可选）
+    mood: Optional[str] = Field(default=None, max_length=20)  # 如: 开心/焦虑/平静/疲惫
+
+    # 标签（JSON 数组，可选）
+    tags: Optional[Dict[str, Any]] = Field(
+        default=None,
+        sa_column=Column("tags", JSONB)
+    )
+
+    # 是否已向量化入库
+    is_vectorized: bool = Field(default=False)
+
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now())
+    )
+    updated_at: datetime = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            server_default=func.now(),
+            onupdate=func.now()
+        )
     )

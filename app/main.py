@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database import init_db
 from app import models
-from app.api.endpoints import sessions, chat, categories, documents
+from app.api.endpoints import sessions, chat, categories, documents, diary
 
 # 生命周期管理：应用启动时初始化数据库
 @asynccontextmanager
@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="AGI Knowledge Assistant Backend",
-    version="0.1.0",
+    version="0.2.0",
     lifespan=lifespan,
 )
 
@@ -37,6 +37,7 @@ app.include_router(sessions.router, prefix="/api/sessions", tags=["Sessions"])
 app.include_router(chat.router, prefix="/api/chat", tags=["Chat"])
 app.include_router(categories.router, prefix="/api/categories", tags=["Categories"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
+app.include_router(diary.router, prefix="/api/diary", tags=["Diary"])
 
 @app.get("/")
 async def root():

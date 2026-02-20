@@ -87,3 +87,25 @@ async def stream_response_via_langchain(
     except Exception as e:
         print(f"流式生成出错: {e}")
         yield f"[系统错误: {str(e)}]"
+
+
+async def generate_title(first_message: str) -> str:
+    """
+    根据用户第一条消息，生成简短的对话标题（≤10字）
+    非流式调用，快速返回
+    """
+    messages = [
+        SystemMessage(content="你是一个标题生成器。根据用户的消息，生成一个简洁的中文对话标题，不超过10个字。只输出标题本身，不要加引号、标点或其他任何内容。"),
+        HumanMessage(content=first_message),
+    ]
+
+    try:
+        result = await llm.ainvoke(messages)
+        title = result.content.strip().strip('"\'""''')
+        # 确保标题不超过 20 字符（兜底）
+        if len(title) > 20:
+            title = title[:20]
+        return title or "新对话"
+    except Exception as e:
+        print(f"生成标题失败: {e}")
+        return "新对话"

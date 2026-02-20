@@ -39,7 +39,28 @@ class MessageRead(BaseModel):
     id: uuid.UUID
     role: str
     content: str
+    sources: Optional[list] = None
     created_at: datetime
     
+    class Config:
+        from_attributes = True
+
+# --- Diary 相关 ---
+class DiaryCreate(BaseModel):
+    date: str  # "2026-02-14"
+    content: str
+    mood: Optional[str] = None
+    tags: Optional[list] = None
+
+class DiaryRead(BaseModel):
+    id: uuid.UUID
+    date: str
+    content: str
+    mood: Optional[str]
+    tags: Optional[list]
+    is_vectorized: bool
+    created_at: datetime
+    updated_at: datetime
+
     class Config:
         from_attributes = True
