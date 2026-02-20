@@ -79,3 +79,41 @@ async def delete_session(
     await db.delete(session)
     await db.commit()
     return {"ok": True}
+
+
+# 4. 更新会话（分类、标题等）
+from pydantic import BaseModel
+
+
+class SessionUpdate(BaseModel):
+    category_id: Optional[int] = None
+    title: Optional[str] = None
+    clear_category: bool = False  # 专门用于清除分类
+
+
+@router.patch("/{session_id}", response_model=SessionRead)
+async def update_session(
+    session_id: str,
+    update_in: SessionUpdate,
+    db: AsyncSession = Depends(get_session),
+):
+    session = await db.get(ChatSession, session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="会话不存在")
+
+    if update_in.clear_category:
+        session.category_id = None
+    elif update_in.category_id is not None:
+        # 验证分类存在
+        category = await db.get(Category, update_in.category_id)
+        if not category:
+            raise HTTPException(status_code=404, detail="分类不存在")
+        session.category_id = update_in.category_id
+
+    if update_in.title is not None:
+        session.title = update_in.title
+
+    db.add(session)
+    await db.commit()
+    await db.refresh(session)
+    return session

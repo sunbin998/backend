@@ -23,6 +23,10 @@ class SessionRead(BaseModel):
         from_attributes = True # 让 Pydantic 能读取 SQLModel 对象
 
 # --- Category 相关 (简单定义) ---
+class CategoryCreate(BaseModel):
+    name: str
+    color_code: Optional[str] = None
+
 class CategoryRead(BaseModel):
     id: int
     name: str
