@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database import init_db
 from app import models
-from app.api.endpoints import sessions, chat, categories, documents, diary
+from app.api.endpoints import sessions, chat, categories, documents, diary, eval
 
 # 生命周期管理：应用启动时初始化数据库
 @asynccontextmanager
@@ -38,6 +38,7 @@ app.include_router(chat.router, prefix="/api/chat", tags=["Chat"])
 app.include_router(categories.router, prefix="/api/categories", tags=["Categories"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
 app.include_router(diary.router, prefix="/api/diary", tags=["Diary"])
+app.include_router(eval.router, prefix="/api/eval", tags=["Evaluation"])
 
 @app.get("/")
 async def root():

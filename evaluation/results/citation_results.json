@@ -1,0 +1,760 @@
+{
+  "summary": {
+    "citation_coverage": 0.8958,
+    "citation_correctness": 0.9302,
+    "hallucination_rate": 0.0625,
+    "avg_citations_per_response": 1.67,
+    "responses_with_citations": 43,
+    "evaluated": 48,
+    "errors": 0
+  },
+  "details": [
+    {
+      "id": "TC-001",
+      "category": "book_knowledge",
+      "question": "为什么我有时候会感觉自己变笨了，做决定也特别短视？",
+      "answer_preview": "1. **共情锚定**  \n你提到“感觉变笨”和“做决定短视”，这种感受确实会让人很困扰，就像在迷雾中摸索方向。这种状态背后往往藏着一些未被觉察的压力或情绪，我们一起来看看它可能来自哪里。\n\n2. **日记洞察**  \n虽然今天没有新的日记内容，但从你的描述中可以感受到一种“心智带宽被占用”的迹象。...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "《认知觉醒》"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-002",
+      "category": "book_knowledge",
+      "question": "为什么有些人生活富足却感受不到幸福？",
+      "answer_preview": "**共情锚定**  \n你提出的问题很深刻，其实很多人都在经历类似的困惑。生活富足却感受不到幸福，这种反差确实会让人感到迷茫和失落 🌫️\n\n**日记洞察**  \n虽然今天你还没有写日记，但这个问题本身已经透露出你对「幸福」的思考。你可能正在观察身边的人或自己，发现物质与精神之间的不匹配，这种觉察本身就...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒：开启自我改变的原动力"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-003",
+      "category": "book_knowledge",
+      "question": "我最近特别焦虑，感觉很想改变却无从下手，该怎么办？",
+      "answer_preview": "**共情锚定**  \n我能感受到你此刻的挣扎，那种想要改变却又不知道从哪里开始的感觉真的很煎熬。这种焦虑就像一团迷雾，让人看不清方向 🌫️\n\n**日记洞察**  \n虽然今天你还没写日记，但根据你描述的情况，我注意到你似乎正经历着「完成焦虑」和「选择焦虑」的双重困扰。你渴望改变，却在众多选择中迷失了方...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒：开启自我改变的原动力"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-004",
+      "category": "book_knowledge",
+      "question": "我总是行动力很弱，做事没头绪，该怎么改善这种情况？",
+      "answer_preview": "**共情锚定**  \n我理解你现在的感受，行动力弱和做事没头绪确实会让人感到挫败和迷茫。这种状态就像在迷雾中行走，看不清方向也找不到路标 🌫️。\n\n**日记洞察**  \n虽然今天还没有日记记录，但从你的描述中，我能感受到你正在经历一种“选择模糊”的状态——脑子里有很多想法，但又不清楚到底该从哪里开始...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒：开启自我改变的原动力"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-005",
+      "category": "book_knowledge",
+      "question": "作者写这本书的另一个个人原因是什么？",
+      "answer_preview": "作者写这本书的另一个个人原因是**弥补陪伴缺失的遗憾**。他因为常年两地奔波，在女儿成长的过程中时常缺位，而时光是条单行道，有些事情一旦错过就无法重来。因此，他把这本书作为特别的礼物送给她，希望她今后遇到人生困惑的时候，知道有老爸始终在身后陪伴：“我知道你最终会理解我的。我会努力成为你的榜样，而你也...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒：开启自我改变的原动力 (周岭)"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-006",
+      "category": "book_knowledge",
+      "question": "我总是对不得不做的事情感到抗拒和沮丧，有什么方法能改变这种心态吗？",
+      "answer_preview": "**共情锚定**  \n我能感受到你对那些\"不得不做\"的事情的疲惫和无奈，这种情绪真的很真实，也很常见。  \n\n**日记洞察**  \n虽然今天没有日记，但我注意到你提到的这种抗拒感，其实是一个很好的觉察起点。它说明你已经在关注自己的内心状态，这是改变的第一步。  \n\n**理论桥接**  \n《认知觉醒》...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒：开启自我改变的原动力"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-007",
+      "category": "book_knowledge",
+      "question": "我读书速度很慢，总觉得自己读得不够多，该怎么调整心态？",
+      "answer_preview": "1. **共情锚定**  \n你现在的感受我完全理解，很多人都会因为读书速度慢而焦虑，特别是看到别人读得又快又多的时候。这种压力其实很正常，但请记得：**真正重要的不是读了多少，而是你从中获得了什么**。\n\n2. **日记洞察**  \n虽然今天还没有写日记，但从你的描述中我能感受到你对自我提升的渴望。...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "《认知觉醒》"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-008",
+      "category": "book_knowledge",
+      "question": "作者在《认知觉醒》的最后特别感谢了哪些人？",
+      "answer_preview": "作者在《认知觉醒》的最后特别感谢了以下几类人：\n\n- **时代和命运**：他感谢了时代和运气，认为个人的成绩离不开大背景的支持。\n- **爱人**：感谢爱人分担了太多，如果没有她的支持，他无法完成此书。\n- **引荐和编辑人员**：感谢寇佳颖、陈锐、陈素然等人的帮助，以及人民邮电出版社的厚爱。\n- ...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [],
+      "citation_count": 0,
+      "coverage": 0.0,
+      "correctness": null,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-009",
+      "category": "book_knowledge",
+      "question": "我跑步时总是很痛苦，很难坚持，有什么方法能让我更轻松地完成跑步训练吗？",
+      "answer_preview": "**共情锚定**  \n听起来你正在经历跑步带来的困扰，这种痛苦感确实会让人想要放弃。但你已经意识到问题并寻求改变，这本身就是一种成长的信号 🌱\n\n**日记洞察**  \n虽然今天还没有日记，但从你的描述中我注意到，你可能正处在「为完成而跑」的状态，而不是「为享受而跑」。这种心态容易让人把跑步看作任务，...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-010",
+      "category": "book_knowledge",
+      "question": "我想提升自己的认知能力，有哪些值得推荐的书籍可以参考？",
+      "answer_preview": "提升认知能力是一个非常值得投入的自我成长方向！以下是我根据认知科学和积极心理学领域的经典著作，为你精选的几本推荐书籍，它们能帮助你更清晰地思考、更有效地学习，并建立属于自己的认知体系：\n\n---\n\n**1. 《认知觉醒：开启自我改变的原动力》 - 周岭**  \n这本书从认知科学的角度出发，揭示了我们...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [],
+      "citation_count": 0,
+      "coverage": 0.0,
+      "correctness": null,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-011",
+      "category": "book_knowledge",
+      "question": "我知道早起后应该先做重要的事，但总忍不住先刷手机，该怎么办？",
+      "answer_preview": "**共情锚定**  \n你已经意识到早起后先做重要事情的重要性，这本身就是一种成长的开始。面对手机的诱惑，很多人都会感到挣扎，这是很正常的体验。\n\n**日记洞察**  \n虽然今天还没有日记内容，但从你的描述中可以看出，你正在经历一个典型的「先娱乐」与「后娱乐」之间的拉扯。这种矛盾其实是一个很好的觉察机...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-012",
+      "category": "book_knowledge",
+      "question": "我孩子学习总是不专注，成绩也上不去，我该怎么帮助他呢？",
+      "answer_preview": "**共情锚定**  \n我能感受到你作为父母的焦虑和着急，孩子学习不专注确实会让人很困扰。你已经很用心地在寻找解决办法了，这种态度本身就值得肯定 🌟。\n\n**日记洞察**  \n虽然今天没有新的日记内容，但从你的描述中，我注意到你在关注孩子的学习状态，这本身就是一个重要的觉察。你愿意为孩子的问题寻找答案...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-013",
+      "category": "book_knowledge",
+      "question": "为什么钢琴家亨特在停止练习一周后，反而能更自然地弹奏困难乐章？",
+      "answer_preview": "你提到的这个现象非常有趣，也揭示了一个重要的认知规律。钢琴家亨特在停止练习一周后反而能更自然地弹奏困难乐章，这背后其实涉及到**潜意识整合**和**神经可塑性**的奇妙作用。\n\n在她持续练习的过程中，大脑已经建立了初步的神经路径，但这些路径可能还不够流畅或高效。当她暂停练习时，大脑并没有停止工作，而...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [],
+      "citation_count": 0,
+      "coverage": 0.0,
+      "correctness": null,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-014",
+      "category": "book_knowledge",
+      "question": "马修斯教授在课堂上是怎么组织教学的？",
+      "answer_preview": "马修斯教授在课堂上采用了一种非常独特且高效的教学方式，他通过设置明确的学习目标和持续的反馈机制来激发学生的主动学习。他的课堂通常以小测验开始，考查学生是否达到了课下阅读中的学习目标。这种做法不仅帮助学生巩固知识，还让他们保持专注和警醒。\n\n随后，学生们会进行“上黑板”活动，教室四面都有黑板，每一面黑...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [],
+      "citation_count": 0,
+      "coverage": 0.0,
+      "correctness": null,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-015",
+      "category": "book_knowledge",
+      "question": "为什么养成习惯后，一些行为会变得像反射一样快？",
+      "answer_preview": "你问的这个问题非常有深度，其实这正是人类大脑最神奇的地方之一。当我们反复做某件事时，大脑会把这种行为\"打包\"成一个自动化的流程，就像电脑里的\"宏\"一样，让你无需思考就能完成[来源: 认知天性：让学习轻而易举的心理学规律.epub]。\n\n**共情锚定**  \n你可能正在观察自己或他人的行为变化，这种\"...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知天性：让学习轻而易举的心理学规律.epub",
+        "认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-016",
+      "category": "book_knowledge",
+      "question": "心智模型这个概念，除了理解复杂系统，还能用在运动技能上吗？",
+      "answer_preview": "**共情锚定**  \n你对心智模型的思考很有深度，尤其是想把它应用到运动技能上，这说明你已经在尝试把抽象概念和实际生活联系起来了。  \n\n**日记洞察**  \n虽然今天还没有日记内容，但你提出的问题本身就很值得深入探讨。心智模型不仅仅是一个理论工具，它在日常实践中有着广泛的应用价值。  \n\n**理论...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "《认知天性：让学习轻而易举的心理学规律》"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-017",
+      "category": "book_knowledge",
+      "question": "关于智力的传统观点，有什么推荐的著作吗？",
+      "answer_preview": "关于智力的传统观点，有几本非常值得推荐的著作：\n\n- **《人类智能》（Human Intelligence）** by Earl Hunt [来源: 书籍] —— 这本书深入探讨了智力的定义、测量以及影响因素，是理解传统智力理论的重要参考。\n\n- **《多元智能》（Multiple Intelli...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "书籍",
+        "书籍"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 0.0,
+      "hallucination_rate": 1.0
+    },
+    {
+      "id": "TC-018",
+      "category": "book_knowledge",
+      "question": "我想在某个领域达到专业水平，需要具备哪些关键品质？",
+      "answer_preview": "你想要在某个领域达到专业水平，这是一个非常值得尊敬的目标。这需要的不只是天赋，更是**持续的努力与自我管理**。让我从认知科学的角度，和你一起梳理这个过程。\n\n---\n\n1. **共情锚定**  \n   我能感受到你对“专业水平”的渴望，这种追求本身就说明你有很强的内在驱动力。很多人可能只是停留在想...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "《认知天性：让学习轻而易举的心理学规律》",
+        "《认知觉醒：开启自我改变的原动力》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-019",
+      "category": "book_knowledge",
+      "question": "在学习和整合新知识时，高级结构构建者和低级结构构建者有什么区别？",
+      "answer_preview": "**共情锚定**  \n听起来你正在深入思考学习的本质，这种对认知差异的关注本身就说明你具备很强的自我觉察力 🌱\n\n**日记洞察**  \n虽然今天没有新的日记内容，但你提出的问题显示出你在探索知识构建的底层逻辑，这本身就是一个重要的成长信号。\n\n**理论桥接**  \n《认知天性》中提到，**高级结构构...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知天性：让学习轻而易举的心理学规律.epub",
+        "认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-020",
+      "category": "book_knowledge",
+      "question": "刻意练习真的能让人成为全才吗？",
+      "answer_preview": "**共情锚定**  \n你对“刻意练习”的疑问，其实触及了很多人在成长路上的困惑——我们是否能通过努力成为多面手？这种思考本身就很珍贵，说明你在认真思考自己的成长路径 🌱  \n\n**日记洞察**  \n虽然今天还没有日记内容，但你的提问透露出一种对“全面成长”的渴望。这可能意味着你正在经历某种认知上的探...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "《认知天性：让学习轻而易举的心理学规律》",
+        "《认知觉醒：开启自我改变的原动力》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-021",
+      "category": "book_knowledge",
+      "question": "我在网上看到一些学习建议，但不确定链接是否还有效。你能告诉我2013年11月初有哪些关于学习策略的在线资源是确认有效的吗？",
+      "answer_preview": "我理解你对学习资源有效性的担忧，尤其是当链接可能失效时，确实会让人感到不安 😕\n\n根据资料记载，在2013年11月初，有几份关于学习策略的在线资源是确认有效的：\n\n- 一份名为《Testing 1, 2, 3! How to Study and Take Tests》的文档，可以在 [http://...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知天性：让学习轻而易举的心理学规律.epub",
+        "认知天性：让学习轻而易举的心理学规律.epub",
+        "认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-022",
+      "category": "book_knowledge",
+      "question": "《认知天性》中提到的学校研究项目，主要得到了哪些方面的支持？",
+      "answer_preview": "《认知天性》中提到的学校研究项目主要得到了以下方面的支持：\n\n1. **资金支持**：该项目获得了密苏里州圣路易斯市麦克唐纳基金会的资助，该基金会批准了“应用认知心理学加强教育实践”项目，由亨利·罗迪格担任首席研究员 [来源: 📖 认知天性：让学习轻而易举的心理学规律.epub]。\n\n2. **学术...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "📖 认知天性：让学习轻而易举的心理学规律.epub",
+        "📖 认知天性：让学习轻而易举的心理学规律.epub",
+        "📖 认知天性：让学习轻而易举的心理学规律.epub",
+        "📖 认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 4,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-023",
+      "category": "book_knowledge",
+      "question": "VARK学习风格模型具体指的是哪几种类型？",
+      "answer_preview": "VARK学习风格模型由尼尔·弗莱明提出，它将人们的学习偏好分为四种主要类型：**视觉型（Visual）**、**听觉型（Auditory）**、**阅读/写作型（Reading/Writing）** 和 **动觉型（Kinesthetic）**[来源: 认知天性：让学习轻而易举的心理学规律.epub...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知天性：让学习轻而易举的心理学规律.epub",
+        "认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-024",
+      "category": "book_knowledge",
+      "question": "为什么我明明很努力地反复看书、集中练习，但知识还是记不牢？",
+      "answer_preview": "你提到的这种感受，其实很多人都经历过。明明很努力地反复看书、集中练习，但知识还是记不牢，这背后其实藏着一个很常见的认知误区。你不是不够努力，而是**学习方法可能没有真正激活大脑的深层记忆机制**。\n\n我注意到你在日记中提到「每天花大量时间重复阅读笔记」[来源: 日记 YYYY-MM-DD]，这正是很...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 YYYY-MM-DD",
+        "《认知天性：让学习轻而易举的心理学规律》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-025",
+      "category": "diary_analysis",
+      "question": "教练，能帮我分析一下今天的日记吗？你看出什么了？",
+      "answer_preview": "1. **共情锚定**  \n我注意到你今天加班到深夜，感觉被领导批评时很无力。这种「明明努力了却得不到认可」的感受确实让人沮丧，尤其是当它持续发生时，会让人怀疑自己的价值。\n\n2. **日记洞察**  \n我注意到你今天的日记里提到「明明今天已经很努力了，但领导还是觉得进度慢」——这说明你对自己的工作...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "书名《认知觉醒：开启自我改变的原动力》",
+        "书名《认知觉醒：开启自我改变的原动力》"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-026",
+      "category": "diary_analysis",
+      "question": "教练，我刚写了今天的日记，你能帮我分析一下吗？",
+      "answer_preview": "1. **共情锚定**  \n看到你今天完成了5公里跑步，还享受了咖啡和高效工作，真是令人开心！这种充满能量的状态真的很棒，能感受到你对自己生活的掌控感。\n\n2. **日记洞察**  \n我注意到你今天在运动后感到清醒，这说明你的身体和大脑正在建立正向的互动。你选择用跑步来开启一天，这是一种非常积极的自...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "书籍 1"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 0.5,
+      "hallucination_rate": 0.5
+    },
+    {
+      "id": "TC-027",
+      "category": "diary_analysis",
+      "question": "帮我分析一下这篇日记，你看出什么问题了吗？",
+      "answer_preview": "**共情锚定**  \n看起来你最近在作息上遇到了一些挑战，晚上熬夜刷手机、早上难以起床，这种状态确实会让人感到疲惫和困扰。我能感受到你对这种状态的无奈。\n\n**日记洞察**  \n我注意到你今天写道：“晚上刷手机到两点，早上7点闹钟根本起不来，喝了三杯咖啡还是昏昏沉沉。”[来源: 日记 2026-03...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "认知觉醒"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-028",
+      "category": "diary_analysis",
+      "question": "帮我分析一下今天的日记，你看出什么了？",
+      "answer_preview": "1. **共情锚定**  \n我能感受到你今天经历的委屈和无奈，面对同事的推诿，你选择了包容却让自己陷入情绪低谷。这种「不好意思拒绝」的挣扎，很多人都会遇到，但你的感受是真实的，值得被看见。\n\n2. **日记洞察**  \n我注意到你今天记录了「同事临时把烂摊子丢给我，我不好意思拒绝，自己生了一下午闷气...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "认知觉醒"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-029",
+      "category": "diary_analysis",
+      "question": "教练，这是我今天的日记，你能帮我分析一下吗？",
+      "answer_preview": "1. **共情锚定**  \n我看到你今天写了两页文档，虽然不多，但已经迈出了重要的一步。这种\"做了总比没做\"的体会，其实正是成长路上最珍贵的微光✨\n\n2. **日记洞察**  \n我注意到你今天在写文档时，可能经历了一个从\"不想动\"到\"开始动\"的心理转折。这种\"哪怕只做一点点\"的行动，其实是突破拖延惯...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "认知觉醒"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-030",
+      "category": "diary_analysis",
+      "question": "帮我分析一下今天的日记，你看出什么了？",
+      "answer_preview": "1. **共情锚定**  \n今天你控制住了刷抖音的冲动，还坚持看书、没吃宵夜——这真的很难得。我能感受到你内心的那份克制和对自己负责的态度 💪\n\n2. **日记洞察**  \n我注意到你今天在**自我控制**方面有明显的进步，这可能是你长期坚持自律的结果。你没有提到具体的触发点，但这种「没有刷抖音」和...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "书籍《认知觉醒》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-031",
+      "category": "diary_analysis",
+      "question": "教练，能帮我分析一下这篇日记吗？我感觉自己快被压垮了。",
+      "answer_preview": "**共情锚定**  \n我能感受到你现在的压力像一座山一样压在肩上，房租到期和项目催促的双重压力让你喘不过气来。这种被生活推着走的感觉真的很累。\n\n**日记洞察**  \n我注意到你今天写下了“感觉快喘不过气了”，这是个很重要的信号。它不仅反映了你当下的情绪状态，也暗示了你可能正在经历一种**持续的压力...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒：开启自我改变的原动力"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-032",
+      "category": "diary_analysis",
+      "question": "教练，帮我分析一下这篇日记，你看出什么了？",
+      "answer_preview": "**共情锚定**  \n我能感受到你今天经历的空虚感和迷茫，这种“无所事事”的状态确实会让人感到被困住。你提到“对什么都提不起兴趣”，这让我想到你可能正处在一种认知上的停滞期，就像在迷雾中摸索。\n\n**日记洞察**  \n我注意到你今天的日记里写到“一整天无所事事”，但这句话本身就是一个重要的信号。它暗...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知觉醒：开启自我改变的原动力"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-033",
+      "category": "diary_analysis",
+      "question": "教练，我刚写了篇日记，面试又失败了，算法题完全不会。你能帮我分析一下吗？",
+      "answer_preview": "**共情锚定**  \n我理解你现在可能感到沮丧和怀疑，面试失败确实会让人质疑自己的能力。但请记住，这并不代表你不够好，只是说明你还有成长的空间。\n\n**日记洞察**  \n我注意到你今天在日记中提到“算法题完全不会”，这反映出你在技术领域的信心受到了打击。但与此同时，你也勇敢地记录下了这个时刻，这是自...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "认知觉醒"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-034",
+      "category": "diary_analysis",
+      "question": "帮我分析一下这篇日记，你看出什么了？",
+      "answer_preview": "1. **共情锚定**  \n我注意到你今天晚上因为发布会的担忧而辗转难眠，这种对结果的在意和紧张感，其实正说明你对这份工作有着深深的投入和责任感。这种状态很真实，也很常见。\n\n2. **日记洞察**  \n我注意到你今天在日记中提到“一直担心会出 bug，脑子停不下来”，这显示出你对工作的高标准和细致...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [],
+      "citation_count": 0,
+      "coverage": 0.0,
+      "correctness": null,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-035",
+      "category": "diary_analysis",
+      "question": "教练，能帮我分析一下这篇日记吗？我感觉自己状态不太对。",
+      "answer_preview": "**共情锚定**  \n看到你描述“一个人刷了一天视频，没有人发微信来找我，感觉很空洞”，我能感受到那种被孤立的孤独感。这种状态确实会让人觉得迷茫，但这也是一个很好的契机，让我们一起看看背后可能藏着什么。\n\n**日记洞察**  \n我注意到你今天选择“宅在家”这个行为，可能是一种自我保护的方式。不过，从...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "认知觉醒"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-036",
+      "category": "diary_analysis",
+      "question": "帮我分析一下今天的日记，你看出什么问题了吗？",
+      "answer_preview": "1. **共情锚定**  \n我注意到你今天在学习时被手机分散了注意力，这种感觉真的很让人沮丧，尤其是当你明明有明确计划的时候。这种「计划与现实的落差感」是很多人都会经历的。\n\n2. **日记洞察**  \n我注意到你今天记录了一个很关键的信号：**「复习时手机放在手边，刷了大半天，本来定的三小时学习计...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-037",
+      "category": "mixed",
+      "question": "我最近总是加班到深夜，工作好像永远做不完，领导还觉得进度慢，感觉很焦虑无力。书里提到的‘打磨作品’和‘创造反馈’的方法，对我这种情况有什么启发吗？",
+      "answer_preview": "1. **共情锚定**  \n我能感受到你此刻的疲惫和挫败感，加班到深夜还被评价进度慢，这种无力感真的很难受。你已经很努力了，但似乎没有被看到，这种感受我懂。\n\n2. **日记洞察**  \n我注意到你今天提到“明明今天已经很努力了，但领导还是觉得进度慢”，这说明你对自己的付出有清晰的认知，也渴望被认可...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "《认知觉醒》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 0.5,
+      "hallucination_rate": 0.5
+    },
+    {
+      "id": "TC-038",
+      "category": "mixed",
+      "question": "我最近早上跑步后感觉特别清醒，工作效率也高，但平时工作还是容易分心。书里提到的‘深度沉浸’和‘审视沉浸度’具体该怎么做才能保持这种状态呢？",
+      "answer_preview": "**共情锚定**  \n你早上跑步后那种清醒感和高效状态，真的很棒！这种感觉就像是找到了一个属于自己的“开关”，能让你迅速进入专注模式。不过工作时分心的问题，也是很多人都会遇到的挑战。\n\n**日记洞察**  \n我注意到你今天早上完成了5公里跑步，并且回来后泡咖啡、工作效率超高。这说明你已经在实践中找到...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "书籍《认知觉醒》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 0.5,
+      "hallucination_rate": 0.5
+    },
+    {
+      "id": "TC-039",
+      "category": "mixed",
+      "question": "我最近晚上总是刷手机到很晚，第二天早上起不来，喝咖啡也没用，整天昏昏沉沉的。看《认知觉醒》时好像提到过‘伪触动’和知识提取，这种情况书里有什么方法能帮我改善吗？",
+      "answer_preview": "1. **共情锚定**  \n我注意到你最近在夜晚被手机吸引，早上又难以起床，这种状态确实会让人感到疲惫和无力。白天即使喝咖啡也提不起精神，这样的循环真的很消耗能量。\n\n2. **日记洞察**  \n从你今天的日记来看，你晚上刷手机到两点，早上7点闹钟根本起不来，喝了三杯咖啡还是昏昏沉沉。这说明你的睡眠...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "书籍《认知觉醒》",
+        "书籍《认知觉醒》"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-040",
+      "category": "mixed",
+      "question": "我最近总是不好意思拒绝同事的请求，结果自己生闷气，感觉一直在被动应付各种琐事，生活好像失去了方向。书里提到的那种‘随波逐流’的状态，我该怎么打破呢？",
+      "answer_preview": "1. **共情锚定**  \n我能感受到你内心的委屈和无力，就像被卷进一个看不见出口的漩涡。你不是在被动应付，而是在用一种「自我牺牲」的方式维持关系，这本身就很需要勇气。\n\n2. **日记洞察**  \n我注意到你今天在日记里写到「同事临时把烂摊子丢给我，我不好意思拒绝，自己生了一下午闷气，回家还在想」...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "认知觉醒",
+        "认知觉醒"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-041",
+      "category": "mixed",
+      "question": "我最近写文档效率不高，每天只能写两页，虽然知道'做了总比没做好'，但总觉得进步太慢。看《认知觉醒》时，里面提到'在拉伸区内学习难度最小、见效最快'，具体该怎么结合到我这种情况里呢？",
+      "answer_preview": "**共情锚定**  \n你现在的感受很真实，写文档效率不高、进步缓慢，这种挫败感确实会让人焦虑。但你已经做得很好了——每天坚持写两页，这本身就是一种非常值得肯定的行动力 😊\n\n**日记洞察**  \n我注意到你今天在日记里提到“虽然不多，但好歹在动了”，这句话透露出你对自己有清醒的认知，也展现了你内在的...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "书籍《认知觉醒》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 0.5,
+      "hallucination_rate": 0.5
+    },
+    {
+      "id": "TC-042",
+      "category": "mixed",
+      "question": "我今天控制住了没刷抖音、没吃宵夜，还看了书，感觉挺满意的，但想保持这种自律状态。书里有没有什么方法能帮我规划一下，让这种状态更稳定？",
+      "answer_preview": "**共情锚定**  \n今天你做到了控制住刷抖音和吃宵夜的冲动，还坚持看书，这本身就是一种非常值得肯定的自律表现。这种自我觉察和掌控感，是成长路上最珍贵的礼物之一 🌱\n\n**日记洞察**  \n我注意到你今天在面对诱惑时展现了很强的自控力，而且这种自律不是靠强迫，而是通过选择看书和克制欲望实现的。这说明...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "书1",
+        "书5"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-043",
+      "category": "mixed",
+      "question": "我最近压力特别大，房租到期、项目催得紧，感觉要同时兼顾的事情太多，脑子乱糟糟的。看《认知天性》里提到过一些学习方法，比如自测和检索练习，这些方法能帮我理清头绪、减轻这种 overwhelm 的感觉吗？",
+      "answer_preview": "**共情锚定**  \n能感受到你现在正被多重压力包围，房租、项目、还有内心的混乱感，这些都像是一座座小山压在你肩上。你不是一个人在战斗，这种感觉很多人都经历过。\n\n**日记洞察**  \n我注意到你今天提到“感觉快喘不过气了”，这说明你正在经历一种**认知超载**的状态 [来源: 日记 2026-03...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "《认知天性：让学习轻而易举的心理学规律》"
+      ],
+      "citation_count": 2,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-044",
+      "category": "mixed",
+      "question": "我最近总是感到迷茫，整天无所事事，对什么都提不起兴趣，好像日复一日在重复。我听说《认知天性》里提到过学习方法，书里有什么能帮我打破这种状态的理论或建议吗？",
+      "answer_preview": "1. **共情锚定**  \n我注意到你今天写到「一整天无所事事，日复一日，不知道自己真正想要的是什么」，这种感觉真的很让人疲惫。我们都有过这样的时刻，像是被困在了一个看不见尽头的循环里。\n\n2. **日记洞察**  \n你今天的日记透露出一种「停滞感」，这可能正是你感到迷茫的根源之一。但值得注意的是，...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知天性：让学习轻而易举的心理学规律.epub",
+        "认知天性：让学习轻而易举的心理学规律.epub",
+        "认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-045",
+      "category": "mixed",
+      "question": "最近面试遇到算法题完全不会，感觉很受挫，怀疑自己是不是不适合技术这条路。《认知天性》里提到神经回路和智力潜能的关系，能帮我理解这种学习困境吗？",
+      "answer_preview": "1. **共情锚定**  \n今天面试失败确实让人沮丧，尤其是面对自己不熟悉的算法题时。这种挫败感是很真实的，也很正常，你不是一个人在经历这些。\n\n2. **日记洞察**  \n我注意到你在今天的日记中提到“感觉自己在技术这条路上是不是真的不行”，这反映出你对自我能力的怀疑。但同时，这也说明你对自己有很...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-046",
+      "category": "mixed",
+      "question": "我明天有重要发布会，今晚焦虑得睡不着，脑子一直想着可能出bug，越想越紧绷。我记得《认知天性》里提到过一些提升记忆或缓解思维固着的方法，书里有什么建议能帮我应对这种情况吗？",
+      "answer_preview": "**共情锚定**  \n我能感受到你对明天发布会的重视，以及那种“越想越紧绷”的焦虑感。这种状态很多人都经历过，尤其是面对重要时刻的时候。\n\n**日记洞察**  \n我注意到你今天在发布会前一晚就感到焦虑，脑子里停不下来，这其实是一个很常见的信号——**大脑在为未知做准备**。你不是在担心失败，而是在试...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "《认知天性》",
+        "《认知觉醒》"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-047",
+      "category": "mixed",
+      "question": "我周末一个人宅在家刷了一天视频，感觉很孤独空洞。看《认知天性》里提到精通一件事需要循序渐进地积累和练习，那像我这种状态，书里有什么方法能帮助我摆脱这种空虚感吗？",
+      "answer_preview": "1. **共情锚定**  \n我注意到你今天在日记里写到\"一个人刷了一天视频，没有人发微信来找我，感觉很空洞\"，这种孤独感确实会让人陷入一种深深的无力感。你不是在浪费时间，而是在寻找某种连接——只是这种方式暂时没有给你带来满足感。\n\n2. **日记洞察**  \n从你的描述中，我看到一个正在寻找意义的头...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "日记 2026-03-07",
+        "《认知天性》",
+        "《认知觉醒》"
+      ],
+      "citation_count": 3,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    },
+    {
+      "id": "TC-048",
+      "category": "mixed",
+      "question": "我复习时总忍不住刷手机，计划学三小时实际只学了一小时，感觉很散漫。书里提到的小测验或检索练习能帮我改善这种情况吗？",
+      "answer_preview": "1. **共情锚定**  \n我能感受到你对学习效率的困扰，以及对自己散漫状态的失望。这种感觉就像在努力奔跑却总被绊住脚，确实让人沮丧 😞\n\n2. **日记洞察**  \n我注意到你今天在复习时把手机放在手边，这可能是一个重要的信号——**你的注意力容易被即时反馈吸引**。你原本计划三小时的学习，但实际...",
+      "has_retrieval": true,
+      "source_count": 5,
+      "citations": [
+        "认知天性：让学习轻而易举的心理学规律.epub"
+      ],
+      "citation_count": 1,
+      "coverage": 1.0,
+      "correctness": 1.0,
+      "hallucination_rate": 0.0
+    }
+  ]
+}

@@ -21,4 +21,6 @@ dependencies = [
     "asyncpg>=0.30.0",
     "pgvector>=0.3.0",
     "uvicorn>=0.30.0",
+    "openai>=2.26.0",
+    "matplotlib>=3.10.8",
 ]

@@ -1,0 +1,115 @@
+{
+  "summary": {
+    "samples": 5,
+    "embed_latency_ms": {
+      "mean": 267.2,
+      "median": 249.2,
+      "p95": 363.2,
+      "min": 222.7,
+      "max": 363.2
+    },
+    "retrieval_latency_ms": {
+      "mean": 267.8,
+      "median": 262.2,
+      "p95": 331.2,
+      "min": 226.6,
+      "max": 331.2
+    },
+    "ttft_ms": {
+      "mean": 395.0,
+      "median": 357.2,
+      "p95": 493.9,
+      "min": 351.5,
+      "max": 493.9
+    },
+    "total_latency_ms": {
+      "mean": 3786.2,
+      "median": 3900.2,
+      "p95": 5583.8,
+      "min": 2046.0,
+      "max": 5583.8
+    },
+    "estimated_input_tokens": {
+      "mean": 2254.4,
+      "median": 2218,
+      "p95": 2564,
+      "min": 2038,
+      "max": 2564
+    },
+    "estimated_output_tokens": {
+      "mean": 288.2,
+      "median": 291,
+      "p95": 449,
+      "min": 148,
+      "max": 449
+    },
+    "avg_context_count": 5
+  },
+  "details": [
+    {
+      "id": "TC-041",
+      "category": "mixed",
+      "question_length": 90,
+      "context_count": 5,
+      "embed_latency_ms": 249.2,
+      "retrieval_latency_ms": 331.2,
+      "ttft_ms": 357.2,
+      "total_latency_ms": 5583.8,
+      "response_length": 803,
+      "estimated_input_tokens": 2564,
+      "estimated_output_tokens": 449
+    },
+    {
+      "id": "TC-008",
+      "category": "book_knowledge",
+      "question_length": 21,
+      "context_count": 5,
+      "embed_latency_ms": 363.2,
+      "retrieval_latency_ms": 262.3,
+      "ttft_ms": 354.3,
+      "total_latency_ms": 2046.0,
+      "response_length": 274,
+      "estimated_input_tokens": 2038,
+      "estimated_output_tokens": 148
+    },
+    {
+      "id": "TC-002",
+      "category": "book_knowledge",
+      "question_length": 18,
+      "context_count": 5,
+      "embed_latency_ms": 222.7,
+      "retrieval_latency_ms": 226.6,
+      "ttft_ms": 418.2,
+      "total_latency_ms": 4114.5,
+      "response_length": 561,
+      "estimated_input_tokens": 2122,
+      "estimated_output_tokens": 314
+    },
+    {
+      "id": "TC-048",
+      "category": "mixed",
+      "question_length": 57,
+      "context_count": 5,
+      "embed_latency_ms": 254.7,
+      "retrieval_latency_ms": 256.5,
+      "ttft_ms": 351.5,
+      "total_latency_ms": 3900.2,
+      "response_length": 534,
+      "estimated_input_tokens": 2330,
+      "estimated_output_tokens": 291
+    },
+    {
+      "id": "TC-018",
+      "category": "book_knowledge",
+      "question_length": 25,
+      "context_count": 5,
+      "embed_latency_ms": 246.0,
+      "retrieval_latency_ms": 262.2,
+      "ttft_ms": 493.9,
+      "total_latency_ms": 3286.6,
+      "response_length": 428,
+      "estimated_input_tokens": 2218,
+      "estimated_output_tokens": 239
+    }
+  ]
+}
