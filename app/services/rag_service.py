@@ -13,7 +13,7 @@ from sqlalchemy import text
 from app.services.embedding_service import embed_query
 
 # 检索配置
-TOP_K = 5
+TOP_K = 10
 SIMILARITY_THRESHOLD = 0.3
 
 # ===================================================
@@ -50,32 +50,35 @@ SYSTEM_PROMPT_TEMPLATE = """<role>
 4. 什么样的行动建议是此刻最有帮助的？（考虑用户的当前状态和承受能力）
 </thinking_protocol>
 
-<response_framework>
-请按以下结构组织回答（可根据对话自然程度适当调整，不必每次都写出标题）：
+<intent_routing>
+首先判断用户的【当前情绪状态】与【发话意图】，并选择对应的回复策略（极度重要！绝对不要机械套用固定格式）：
 
-1. **共情锚定**（1-2 句）
-   - 回应用户的情绪和处境，让ta感到被理解
-   - 避免空洞的"我理解你的感受"，要具体指出你理解的是什么
+1. **闲聊模式 (Casual Chat)**
+   - 触发条件：日常打招呼、简单的分享（例如“今天天气不错”、“早安”）。
+   - 回复策略：必须极度简短、自然、像真人的对话。无需抛出理论、不要总结日记、不要列行动清单，1-2句话即可。
 
-2. **日记洞察**（如有当天日记）
-   - 从日记中提取用户可能没注意到的模式、亮点或转折点
-   - 用「我注意到你今天...」的方式温和指出
-   - 将日记细节与用户的提问建立关联
+2. **情感倾诉模式 (Emotional Catharsis)**
+   - 触发条件：用户在宣泄负面情绪、表达委屈、愤怒、极度失落时。
+   - 回复策略：**绝对不要给建议！绝对不要讲大道理！**
+   - 行动：提供纯粹的心理支撑（Hold Space），承认并接纳ta的情绪。如果需要，仅用一句温柔的提问进行回应（如“听起来你今天真的很累，想多和我说说那时的感觉吗？”）。
 
-3. **理论桥接**
-   - 引用参考资料中最相关的理论或方法
-   - 不要照搬原文，用教练的语言重新表达
-   - 解释"为什么这个理论与你的情况相关"
+3. **寻求建议模式 (Seeking Advice & Problem Solving)**
+   - 触发条件：明确提出困惑、寻求方法改进（如“我该怎么戒掉刷短视频？”）。
+   - 回复策略：
+     - (a) **共情锚定**：简短回应ta目前的挣扎点。
+     - (b) **结合日记与检索理论**：把你从参考资料找到的【知识块】与ta【日记中的症状】融合，用“朋友的口吻”向ta解释其背后的成因。
+     - (c) **开出微行动处方**：提供 1-2 个立刻能试的微小行动阶梯（用“你可以试试...”而不是“你应该...”）。
 
-4. **行动阶梯**（1-3 步，由易到难）
-   - 每个步骤必须足够具体，用户今天就能开始做
-   - 用「你可以试试...」而非「你应该...」
-   - 考虑用户当前的能量水平和心情
+4. **深度复盘模式 (Deep Reflection)**
+   - 触发条件：用户自己进行了较长的反思，或希望发掘潜在的行为模式。
+   - 回复策略：化身苏格拉底。指出你在ta日记和过往认知中看到的【模式闭环】，并用一个深刻的、一针见血的反思性提问（Reflective Question）结束，引导ta自己悟出答案。
+</intent_routing>
 
-5. **反思提问**（1 个问题，可选）
-   - 留一个开放式问题引导用户继续思考
-   - 好的问题比好的答案更有力量
-</response_framework>
+<response_guidelines>
+- 抛弃一切机械的“1234”编号排版，让文字如活水般自然流淌。
+- 只有在【寻求建议】时，才考虑输出“小步行动”的列表，否则使用散文式的自然段落。
+- 不要在每句话后面都加上大道理，让知识无痕地融化在关怀之中。
+</response_guidelines>
 
 <style>
 - 语气：温暖而坦诚，像一位你信任的学长/学姐
@@ -152,26 +155,38 @@ def _get_source_name(metadata: dict) -> str:
     return "未知来源"
 
 
-async def retrieve_relevant_chunks(
-    query: str, db: AsyncSession, top_k: int = TOP_K
+async def _vector_retrieve(
+    query: str, db: AsyncSession, top_k: int = TOP_K,
+    book_filter: List[str] = None,
 ) -> List[Tuple[str, float, dict]]:
-    """向量相似度检索"""
+    """向量相似度检索（支持元数据预过滤）"""
     query_embedding = embed_query(query)
     query_vec_str = str(query_embedding)
 
-    sql = text(
-        "SELECT content, metadata, "
-        "1 - (embedding <=> CAST(:qvec AS vector)) AS similarity "
-        "FROM documents "
-        "WHERE embedding IS NOT NULL "
-        "ORDER BY embedding <=> CAST(:qvec AS vector) "
-        "LIMIT :topk"
-    )
+    # 构建 SQL（根据是否有书籍过滤条件）
+    if book_filter:
+        sql = text(
+            "SELECT content, metadata, "
+            "1 - (embedding <=> CAST(:qvec AS vector)) AS similarity "
+            "FROM documents "
+            "WHERE embedding IS NOT NULL "
+            "AND metadata->>'filename' = ANY(:filenames) "
+            "ORDER BY embedding <=> CAST(:qvec AS vector) "
+            "LIMIT :topk"
+        )
+        params = {"qvec": query_vec_str, "topk": top_k, "filenames": book_filter}
+    else:
+        sql = text(
+            "SELECT content, metadata, "
+            "1 - (embedding <=> CAST(:qvec AS vector)) AS similarity "
+            "FROM documents "
+            "WHERE embedding IS NOT NULL "
+            "ORDER BY embedding <=> CAST(:qvec AS vector) "
+            "LIMIT :topk"
+        )
+        params = {"qvec": query_vec_str, "topk": top_k}
 
-    result = await db.execute(
-        sql,
-        {"qvec": query_vec_str, "topk": top_k},
-    )
+    result = await db.execute(sql, params)
     rows = result.fetchall()
 
     relevant = []
@@ -181,6 +196,143 @@ async def retrieve_relevant_chunks(
             relevant.append((content, similarity, metadata or {}))
 
     return relevant
+
+
+async def _bm25_retrieve(
+    query: str, db: AsyncSession, top_k: int = TOP_K,
+    book_filter: List[str] = None,
+) -> List[Tuple[str, float, dict]]:
+    """BM25 关键词检索（jieba 分词 + rank_bm25）"""
+    import jieba
+    from rank_bm25 import BM25Okapi
+
+    # 1. 从数据库加载候选文档（支持书籍过滤）
+    if book_filter:
+        sql = text(
+            "SELECT content, metadata FROM documents "
+            "WHERE metadata->>'filename' = ANY(:filenames)"
+        )
+        result = await db.execute(sql, {"filenames": book_filter})
+    else:
+        sql = text("SELECT content, metadata FROM documents")
+        result = await db.execute(sql)
+
+    rows = result.fetchall()
+    if not rows:
+        return []
+
+    # 2. jieba 分词建立语料库
+    corpus_texts = [row[0] for row in rows]
+    corpus_meta = [row[1] or {} for row in rows]
+    tokenized_corpus = [list(jieba.cut(text)) for text in corpus_texts]
+
+    # 3. BM25 打分
+    bm25 = BM25Okapi(tokenized_corpus)
+    query_tokens = list(jieba.cut(query))
+    scores = bm25.get_scores(query_tokens)
+
+    # 4. 排序取 Top-K
+    scored_indices = sorted(
+        range(len(scores)), key=lambda i: scores[i], reverse=True
+    )[:top_k]
+
+    results = []
+    for idx in scored_indices:
+        if scores[idx] > 0:  # 过滤零分（完全不匹配）
+            results.append((corpus_texts[idx], float(scores[idx]), corpus_meta[idx]))
+
+    return results
+
+
+def _rrf_fusion(
+    *ranked_lists: List[Tuple[str, float, dict]],
+    k: int = 60,
+    top_k: int = TOP_K,
+) -> List[Tuple[str, float, dict]]:
+    """
+    RRF (Reciprocal Rank Fusion) 融合多路检索结果
+    
+    公式: RRF_score(doc) = Σ 1/(k + rank_i)
+    k=60 是业界标准值（Elasticsearch/Pinecone 默认）
+    """
+    rrf_scores = {}  # content -> {"score": float, "metadata": dict}
+
+    for ranked_list in ranked_lists:
+        for rank, (content, _original_score, metadata) in enumerate(ranked_list):
+            if content not in rrf_scores:
+                rrf_scores[content] = {"score": 0.0, "metadata": metadata}
+            rrf_scores[content]["score"] += 1.0 / (k + rank + 1)
+
+    # 按 RRF 分数降序排序
+    sorted_results = sorted(
+        rrf_scores.items(), key=lambda x: x[1]["score"], reverse=True
+    )
+
+    # 理论最高分：该知识块在所有的检索路径中全都排在第一名 (rank=0)
+    # 这用于将 RRF 绝对数值（非常小，如 0.05）归一化为 0~1 的百分比相关度，便于前端展示
+    if len(ranked_lists) > 0:
+        max_possible_score = len(ranked_lists) * (1.0 / (k + 1))
+    else:
+        max_possible_score = 1.0
+
+    # 转换回标准格式并归一化分数
+    final = []
+    for content, info in sorted_results[:top_k]:
+        normalized_score = min(info["score"] / max_possible_score, 1.0)
+        final.append((content, normalized_score, info["metadata"]))
+
+    return final
+
+
+async def retrieve_relevant_chunks(
+    query: str,
+    db: AsyncSession,
+    diary_content: str = None,
+    top_k: int = TOP_K,
+    book_filter: List[str] = None,
+) -> List[Tuple[str, float, dict]]:
+    """
+    混合检索主入口：
+    1. 元数据预过滤（按书籍）
+    2. 向量检索（提问 + 日记双路）
+    3. BM25 关键词检索（提问）
+    4. RRF 融合所有结果
+    
+    参数:
+        query: 用户的提问
+        diary_content: 当天日记内容（可选，用于向量双路检索）
+        book_filter: 书籍文件名列表（可选，用于元数据预过滤）
+    """
+    retrieval_paths = []
+
+    # 路径 1: 向量检索 - 用户提问
+    vector_question = await _vector_retrieve(query, db, top_k=top_k * 2, book_filter=book_filter)
+    retrieval_paths.append(vector_question)
+
+    # 路径 2: 向量检索 - 日记内容（如果有）
+    if diary_content and diary_content.strip():
+        diary_query = diary_content.strip()[:500]
+        vector_diary = await _vector_retrieve(diary_query, db, top_k=top_k * 2, book_filter=book_filter)
+        retrieval_paths.append(vector_diary)
+
+    # 路径 3: BM25 关键词检索 - 用户提问
+    bm25_results = await _bm25_retrieve(query, db, top_k=top_k * 2, book_filter=book_filter)
+    retrieval_paths.append(bm25_results)
+
+    # RRF 融合所有路径
+    final_results = _rrf_fusion(*retrieval_paths, top_k=top_k)
+
+    # 日志
+    path_names = ["向量(提问)"]
+    if diary_content and diary_content.strip():
+        path_names.append("向量(日记)")
+    path_names.append("BM25(提问)")
+    path_counts = [len(p) for p in retrieval_paths]
+    filter_info = f"[书籍过滤: {', '.join(book_filter)}]" if book_filter else "[全部书籍]"
+    
+    print(f"  混合检索 {filter_info}: {' + '.join(f'{n}={c}' for n, c in zip(path_names, path_counts))} → RRF融合后 {len(final_results)} 个")
+
+    return final_results
 
 
 def build_rag_prompt(

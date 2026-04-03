@@ -48,17 +48,20 @@ async def get_sessions(
     if category_id:
         query = query.where(ChatSession.category_id == category_id)
     
-    # 筛选：关键词 (搜索标题或摘要)
+    # 筛选：关键词 (搜索标题或聊天内容)
     if keyword:
+        from app.models import Message
+        query = query.outerjoin(Message, ChatSession.id == Message.session_id)
         query = query.where(
             or_(
-                ChatSession.title.contains(keyword),
-                ChatSession.summary.contains(keyword)
+                ChatSession.title.ilike(f"%{keyword}%"),
+                ChatSession.summary.ilike(f"%{keyword}%"),
+                Message.content.ilike(f"%{keyword}%")
             )
-        )
+        ).distinct()
     
-    # 排序：置顶优先，然后按更新时间倒序
-    query = query.order_by(desc(ChatSession.is_pinned), desc(ChatSession.updated_at))
+    # 排序：置顶优先，然后按创建时间倒序
+    query = query.order_by(desc(ChatSession.is_pinned), desc(ChatSession.created_at))
     
     # 分页
     query = query.offset(skip).limit(limit)
@@ -76,6 +79,13 @@ async def delete_session(
     if not session:
         raise HTTPException(status_code=404, detail="会话不存在")
     
+    # NEW: 清理关联的长效记忆向量数据
+    from sqlalchemy import text
+    await db.execute(
+        text("DELETE FROM documents WHERE metadata->>'source_type' = 'chat_memory' AND metadata->>'session_id' = :session_id"),
+        {"session_id": session_id},
+    )
+
     await db.delete(session)
     await db.commit()
     return {"ok": True}

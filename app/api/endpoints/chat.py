@@ -2,18 +2,21 @@
 """
 聊天 API（已集成 RAG 管线 + 对话历史上下文 + 自动标题生成）
 """
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from sqlmodel import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import text
 from typing import List
 import uuid
 import json
 import asyncio
 
-from app.services.llm_service import stream_response_via_langchain, generate_title
+from app.services.llm_service import stream_response_via_langchain, generate_title, generate_session_summary
 from app.services.rag_service import retrieve_relevant_chunks, build_rag_prompt, extract_sources
-from app.database import get_session
-from app.models import Message, ChatSession, DiaryEntry
+from app.services.embedding_service import embed_texts
+from app.database import get_session, engine
+from app.models import Message, ChatSession, DiaryEntry, Document
 from app.schemas import MessageCreate, MessageRead
 from fastapi.responses import StreamingResponse
 from datetime import date
@@ -36,6 +39,51 @@ async def _load_history(session_id: uuid.UUID, db: AsyncSession) -> List[dict]:
     messages = result.all()
     messages.reverse()
     return [{"role": msg.role, "content": msg.content} for msg in messages]
+
+async def _update_session_summary(session_id: uuid.UUID, history: List[dict]):
+    """异步任务：重新生成会话摘要并存入 RAG 长效记忆"""
+    try:
+        # 因为后台任务不在主生命周期，手动创建独立的 Session
+        async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+        async with async_session() as db:
+            # 1. 生成摘要
+            summary_text = await generate_session_summary(history)
+            if not summary_text:
+                return
+            
+            print(f"触发长期记忆提炼，Session: {session_id} -> {summary_text[:30]}...")
+
+            # 2. 更新 Session 的 summary 字段
+            session = await db.get(ChatSession, session_id)
+            if session:
+                session.summary = summary_text
+                db.add(session)
+                await db.commit()
+
+            # 3. 向量化入库 (长效记忆)
+            # 先清除旧记忆
+            await db.execute(
+                text("DELETE FROM documents WHERE metadata->>'source_type' = 'chat_memory' AND metadata->>'session_id' = :sid"),
+                {"sid": str(session_id)},
+            )
+            await db.commit()
+
+            # 生成向量
+            embeddings = await asyncio.to_thread(embed_texts, [summary_text])
+            if embeddings:
+                doc = Document(
+                    content=summary_text,
+                    metadata_={
+                        "source_type": "chat_memory",
+                        "session_id": str(session_id),
+                    },
+                    embedding=embeddings[0],
+                )
+                db.add(doc)
+                await db.commit()
+                print("长效记忆已成功转存至 RAG documents 库。")
+    except Exception as e:
+        print(f"提取或存入长期记忆失败: {e}")
 
 
 async def _is_first_message(session_id: uuid.UUID, db: AsyncSession) -> bool:
@@ -144,6 +192,7 @@ async def generate_and_save(
 @router.post("/messages/stream")
 async def send_message_stream(
     message_in: MessageCreate,
+    background_tasks: BackgroundTasks,
     db: AsyncSession = Depends(get_session),
 ):
     # 1. 先保存用户消息
@@ -164,12 +213,14 @@ async def send_message_stream(
     if history and history[-1]["role"] == "user" and history[-1]["content"] == message_in.content:
         history = history[:-1]
 
-    # 4. RAG 检索 + 当天日记注入
+    # 4. RAG 检索 + 会话当时日记注入
     sources = []
     try:
-        # 4a. 查询当天日记
-        today_str = date.today().isoformat()
-        diary_statement = select(DiaryEntry).where(DiaryEntry.date == today_str)
+        # 4a. 查询会话当天的日记
+        session = await db.get(ChatSession, message_in.session_id)
+        target_date_str = session.created_at.astimezone().date().isoformat() if session and session.created_at else date.today().isoformat()
+        
+        diary_statement = select(DiaryEntry).where(DiaryEntry.date == target_date_str)
         diary_result = await db.exec(diary_statement)
         today_diary_entry = diary_result.first()
 
@@ -177,17 +228,21 @@ async def send_message_stream(
         today_mood = today_diary_entry.mood if today_diary_entry else None
 
         if today_diary:
-            print(f"已注入当天日记 ({today_str}), 长度: {len(today_diary)} 字")
+            print(f"已注入当时日记 ({target_date_str}), 长度: {len(today_diary)} 字")
 
-        # 4b. 向量检索参考资料
-        relevant_chunks = await retrieve_relevant_chunks(message_in.content, db)
+        # 4b. 向量检索参考资料（混合检索：向量 + BM25 + RRF 融合）
+        relevant_chunks = await retrieve_relevant_chunks(
+            message_in.content, db,
+            diary_content=today_diary,
+            book_filter=message_in.book_filter,
+        )
         sources = extract_sources(relevant_chunks)
 
         # 4c. 构建完整 System Prompt
         system_prompt = build_rag_prompt(
             relevant_chunks,
             today_diary=today_diary,
-            today_date=today_str,
+            today_date=target_date_str,
             today_mood=today_mood,
         )
 
@@ -200,7 +255,10 @@ async def send_message_stream(
         await db.rollback()
         system_prompt = None
 
-    # 5. 返回流式响应
+    # 5. 后台挂载记忆总结触发任务
+    background_tasks.add_task(_trigger_memory_update_after_stream, message_in.session_id)
+
+    # 6. 返回流式响应
     return StreamingResponse(
         generate_and_save(
             message_in.session_id, message_in.content, db,
@@ -208,3 +266,23 @@ async def send_message_stream(
         ),
         media_type="text/event-stream",
     )
+
+async def _trigger_memory_update_after_stream(session_id: uuid.UUID):
+    # 后台进程在返回给客户端后启动，等待 2 秒确保上层 db 已 commit
+    await asyncio.sleep(2)
+    async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+    async with async_session() as ds:
+        # 拉取最近的历史（包括AI刚才生成的那句）
+        stmt = select(Message).where(Message.session_id == session_id).order_by(desc(Message.created_at)).limit(HISTORY_LIMIT)
+        res = await ds.execute(stmt)
+        msgs = res.scalars().all()
+        msgs.reverse()
+        history = [{"role": m.role, "content": m.content} for m in msgs]
+        
+        total_stmt = select(Message).where(Message.session_id == session_id)
+        total_res = await ds.execute(total_stmt)
+        total_count = len(total_res.scalars().all())
+        
+        # 只在对话回合数为 4, 8, 12 等（每次含AI回话即为2的倍数，即第4、8次交互发生成）
+        if total_count >= 4 and total_count % 4 == 0:
+            await _update_session_summary(session_id, history)

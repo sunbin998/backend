@@ -65,6 +65,7 @@ async def _vectorize_diary(diary: DiaryEntry, db: AsyncSession):
     diary.is_vectorized = True
     db.add(diary)
     await db.commit()
+    await db.refresh(diary)
 
     print(f"日记 {diary.date} 已向量化: {len(chunks)} 个切片")
 

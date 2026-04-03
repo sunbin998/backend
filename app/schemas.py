@@ -38,6 +38,7 @@ class CategoryRead(BaseModel):
 class MessageCreate(BaseModel):
     session_id: uuid.UUID
     content: str
+    book_filter: Optional[List[str]] = None  # 书籍过滤：为空=全部，["书名.epub"]=指定书
 
 class MessageRead(BaseModel):
     id: uuid.UUID

@@ -109,3 +109,35 @@ async def generate_title(first_message: str) -> str:
     except Exception as e:
         print(f"生成标题失败: {e}")
         return "新对话"
+
+async def generate_session_summary(chat_history: List[dict]) -> str:
+    """
+    根据历史对话记录，生成用于长期记忆的抽象总结。
+    非流式调用，可能会耗时 1-3 秒。
+    """
+    if not chat_history:
+        return ""
+        
+    chat_text = "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])
+    
+    sys_prompt = (
+        "你是一个记忆提炼师，负责为个人成长教练系统生成长效记忆。\n"
+        "你需要从提供的这通对话流水记录中，提炼出具有高浓度的总结。\n"
+        "【总结核心】：\n"
+        "1. 遇到了什么核心困惑/问题？\n"
+        "2. 最终给出了哪些建设性的认知方案或微行动？\n"
+        "3. 这段对话揭示了该用户怎样的个人特质或行为模式？\n"
+        "【格式要求】：不用编号，使用平稳的陈述性段落，尽量控制在 200 字以内。只输出摘要本身。"
+    )
+    
+    messages = [
+        SystemMessage(content=sys_prompt),
+        HumanMessage(content=f"【对话记录如下】：\n{chat_text}"),
+    ]
+
+    try:
+        result = await llm.ainvoke(messages)
+        return result.content.strip()
+    except Exception as e:
+        print(f"生成记忆摘要失败: {e}")
+        return ""
