@@ -4,6 +4,45 @@ from typing import List, Optional
 from datetime import datetime
 import uuid
 
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+    email: Optional[str] = None
+
+
+class UserLogin(BaseModel):
+    username: str
+    password: str
+
+
+class UserRead(BaseModel):
+    id: uuid.UUID
+    username: str
+    email: Optional[str]
+    avatar: Optional[str]
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class TokenPair(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+
+class AuthResponse(BaseModel):
+    user: UserRead
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
+
 # --- Session 相关 ---
 class SessionCreate(BaseModel):
     category_id: Optional[int] = None # 允许不选分类

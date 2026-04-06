@@ -1,31 +1,39 @@
 # app/api/endpoints/sessions.py
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select, desc, or_
 from typing import List, Optional
 
+from app.api.deps import get_current_user
 from app.database import get_session
-from app.models import ChatSession, Category
+from app.models import ChatSession, Category, User
 from app.schemas import SessionCreate, SessionRead
 
 router = APIRouter()
 
 # 1. 创建新会话
+@router.post("", response_model=SessionRead, include_in_schema=False)
 @router.post("/", response_model=SessionRead)
 async def create_session(
     session_in: SessionCreate,
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     # 如果传了 category_id，先校验存在性
     if session_in.category_id:
-        category = await db.get(Category, session_in.category_id)
+        statement = select(Category).where(
+            Category.id == session_in.category_id,
+            Category.user_id == current_user.id,
+        )
+        category = (await db.exec(statement)).first()
         if not category:
             raise HTTPException(status_code=404, detail="分类不存在")
 
     # 创建数据库实例
     db_session = ChatSession(
         title=session_in.title,
-        category_id=session_in.category_id
+        category_id=session_in.category_id,
+        user_id=current_user.id,
     )
     db.add(db_session)
     await db.commit()
@@ -33,16 +41,18 @@ async def create_session(
     return db_session
 
 # 2. 获取会话列表 (支持 搜索 + 分类筛选 + 分页)
+@router.get("", response_model=List[SessionRead], include_in_schema=False)
 @router.get("/", response_model=List[SessionRead])
 async def get_sessions(
     skip: int = 0,
     limit: int = 20,
     keyword: Optional[str] = None,
     category_id: Optional[int] = None,
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     # 构建查询
-    query = select(ChatSession)
+    query = select(ChatSession).where(ChatSession.user_id == current_user.id)
     
     # 筛选：分类
     if category_id:
@@ -70,20 +80,31 @@ async def get_sessions(
     return result.all()
 
 # 3. 删除会话
+@router.delete("/{session_id}/", include_in_schema=False)
 @router.delete("/{session_id}")
 async def delete_session(
     session_id: str,
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
-    session = await db.get(ChatSession, session_id)
+    statement = select(ChatSession).where(
+        ChatSession.id == session_id,
+        ChatSession.user_id == current_user.id,
+    )
+    session = (await db.exec(statement)).first()
     if not session:
         raise HTTPException(status_code=404, detail="会话不存在")
     
     # NEW: 清理关联的长效记忆向量数据
     from sqlalchemy import text
     await db.execute(
-        text("DELETE FROM documents WHERE metadata->>'source_type' = 'chat_memory' AND metadata->>'session_id' = :session_id"),
-        {"session_id": session_id},
+        text(
+            "DELETE FROM documents "
+            "WHERE user_id = CAST(:user_id AS uuid) "
+            "AND metadata->>'source_type' = 'chat_memory' "
+            "AND metadata->>'session_id' = :session_id"
+        ),
+        {"session_id": session_id, "user_id": str(current_user.id)},
     )
 
     await db.delete(session)
@@ -102,12 +123,18 @@ class SessionUpdate(BaseModel):
 
 
 @router.patch("/{session_id}", response_model=SessionRead)
+@router.patch("/{session_id}/", response_model=SessionRead, include_in_schema=False)
 async def update_session(
     session_id: str,
     update_in: SessionUpdate,
     db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
-    session = await db.get(ChatSession, session_id)
+    statement = select(ChatSession).where(
+        ChatSession.id == session_id,
+        ChatSession.user_id == current_user.id,
+    )
+    session = (await db.exec(statement)).first()
     if not session:
         raise HTTPException(status_code=404, detail="会话不存在")
 
@@ -115,7 +142,11 @@ async def update_session(
         session.category_id = None
     elif update_in.category_id is not None:
         # 验证分类存在
-        category = await db.get(Category, update_in.category_id)
+        category_stmt = select(Category).where(
+            Category.id == update_in.category_id,
+            Category.user_id == current_user.id,
+        )
+        category = (await db.exec(category_stmt)).first()
         if not category:
             raise HTTPException(status_code=404, detail="分类不存在")
         session.category_id = update_in.category_id

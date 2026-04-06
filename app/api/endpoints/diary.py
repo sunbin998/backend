@@ -8,8 +8,9 @@ from sqlmodel import select, desc
 from typing import List, Optional
 import asyncio
 
+from app.api.deps import get_current_user
 from app.database import get_session
-from app.models import DiaryEntry, Document
+from app.models import DiaryEntry, Document, User
 from app.schemas import DiaryCreate, DiaryRead
 from app.services.embedding_service import embed_texts
 
@@ -29,8 +30,13 @@ async def _vectorize_diary(diary: DiaryEntry, db: AsyncSession):
     # 1. 先清除该日记的旧向量数据
     from sqlalchemy import text
     await db.execute(
-        text("DELETE FROM documents WHERE metadata->>'source_type' = 'diary' AND metadata->>'diary_date' = :date"),
-        {"date": diary.date},
+        text(
+            "DELETE FROM documents "
+            "WHERE user_id = CAST(:user_id AS uuid) "
+            "AND metadata->>'source_type' = 'diary' "
+            "AND metadata->>'diary_date' = :date"
+        ),
+        {"date": diary.date, "user_id": str(diary.user_id)},
     )
 
     # 2. 切片
@@ -49,6 +55,7 @@ async def _vectorize_diary(diary: DiaryEntry, db: AsyncSession):
     # 4. 批量写入 documents 表
     for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
         doc = Document(
+            user_id=diary.user_id,
             content=chunk,
             metadata_={
                 "source_type": "diary",
@@ -71,14 +78,19 @@ async def _vectorize_diary(diary: DiaryEntry, db: AsyncSession):
 
 
 # 1. 创建/更新日记（按日期 upsert）
+@router.post("/", response_model=DiaryRead, include_in_schema=False)
 @router.post("", response_model=DiaryRead)
 async def upsert_diary(
     diary_in: DiaryCreate,
     db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """创建或更新指定日期的日记"""
     # 查找是否已存在该日期的日记
-    statement = select(DiaryEntry).where(DiaryEntry.date == diary_in.date)
+    statement = select(DiaryEntry).where(
+        DiaryEntry.user_id == current_user.id,
+        DiaryEntry.date == diary_in.date,
+    )
     result = await db.exec(statement)
     existing = result.first()
 
@@ -95,6 +107,7 @@ async def upsert_diary(
     else:
         # 创建
         diary = DiaryEntry(
+            user_id=current_user.id,
             date=diary_in.date,
             content=diary_in.content,
             mood=diary_in.mood,
@@ -115,14 +128,16 @@ async def upsert_diary(
 
 
 # 2. 获取日记列表
+@router.get("/", response_model=List[DiaryRead], include_in_schema=False)
 @router.get("", response_model=List[DiaryRead])
 async def list_diaries(
     month: Optional[str] = None,  # 格式: "2026-02"
     limit: int = 30,
     db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """获取日记列表，支持按月筛选"""
-    query = select(DiaryEntry)
+    query = select(DiaryEntry).where(DiaryEntry.user_id == current_user.id)
 
     if month:
         query = query.where(DiaryEntry.date.startswith(month))
@@ -134,13 +149,18 @@ async def list_diaries(
 
 
 # 3. 获取指定日期日记
+@router.get("/{date}/", response_model=Optional[DiaryRead], include_in_schema=False)
 @router.get("/{date}", response_model=Optional[DiaryRead])
 async def get_diary(
     date: str,
     db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """获取指定日期的日记"""
-    statement = select(DiaryEntry).where(DiaryEntry.date == date)
+    statement = select(DiaryEntry).where(
+        DiaryEntry.user_id == current_user.id,
+        DiaryEntry.date == date,
+    )
     result = await db.exec(statement)
     diary = result.first()
 
@@ -151,13 +171,18 @@ async def get_diary(
 
 
 # 4. 删除日记
+@router.delete("/{date}/", include_in_schema=False)
 @router.delete("/{date}")
 async def delete_diary(
     date: str,
     db: AsyncSession = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     """删除指定日期的日记"""
-    statement = select(DiaryEntry).where(DiaryEntry.date == date)
+    statement = select(DiaryEntry).where(
+        DiaryEntry.user_id == current_user.id,
+        DiaryEntry.date == date,
+    )
     result = await db.exec(statement)
     diary = result.first()
 
@@ -167,8 +192,13 @@ async def delete_diary(
     # 同时删除关联的 documents
     from sqlalchemy import text
     await db.execute(
-        text("DELETE FROM documents WHERE metadata->>'source_type' = 'diary' AND metadata->>'diary_date' = :date"),
-        {"date": date},
+        text(
+            "DELETE FROM documents "
+            "WHERE user_id = CAST(:user_id AS uuid) "
+            "AND metadata->>'source_type' = 'diary' "
+            "AND metadata->>'diary_date' = :date"
+        ),
+        {"date": date, "user_id": str(current_user.id)},
     )
 
     await db.delete(diary)

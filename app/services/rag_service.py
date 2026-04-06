@@ -7,6 +7,7 @@ RAG 检索 + Prompt 构建服务
 """
 from typing import List, Tuple, Optional
 from datetime import date
+import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import text
 
@@ -158,13 +159,31 @@ def _get_source_name(metadata: dict) -> str:
 async def _vector_retrieve(
     query: str, db: AsyncSession, top_k: int = TOP_K,
     book_filter: List[str] = None,
+    user_id: Optional[uuid.UUID] = None,
 ) -> List[Tuple[str, float, dict]]:
     """向量相似度检索（支持元数据预过滤）"""
     query_embedding = embed_query(query)
     query_vec_str = str(query_embedding)
 
     # 构建 SQL（根据是否有书籍过滤条件）
-    if book_filter:
+    if book_filter and user_id:
+        sql = text(
+            "SELECT content, metadata, "
+            "1 - (embedding <=> CAST(:qvec AS vector)) AS similarity "
+            "FROM documents "
+            "WHERE embedding IS NOT NULL "
+            "AND user_id = CAST(:user_id AS uuid) "
+            "AND metadata->>'filename' = ANY(:filenames) "
+            "ORDER BY embedding <=> CAST(:qvec AS vector) "
+            "LIMIT :topk"
+        )
+        params = {
+            "qvec": query_vec_str,
+            "topk": top_k,
+            "filenames": book_filter,
+            "user_id": str(user_id),
+        }
+    elif book_filter:
         sql = text(
             "SELECT content, metadata, "
             "1 - (embedding <=> CAST(:qvec AS vector)) AS similarity "
@@ -175,6 +194,21 @@ async def _vector_retrieve(
             "LIMIT :topk"
         )
         params = {"qvec": query_vec_str, "topk": top_k, "filenames": book_filter}
+    elif user_id:
+        sql = text(
+            "SELECT content, metadata, "
+            "1 - (embedding <=> CAST(:qvec AS vector)) AS similarity "
+            "FROM documents "
+            "WHERE embedding IS NOT NULL "
+            "AND user_id = CAST(:user_id AS uuid) "
+            "ORDER BY embedding <=> CAST(:qvec AS vector) "
+            "LIMIT :topk"
+        )
+        params = {
+            "qvec": query_vec_str,
+            "topk": top_k,
+            "user_id": str(user_id),
+        }
     else:
         sql = text(
             "SELECT content, metadata, "
@@ -201,18 +235,35 @@ async def _vector_retrieve(
 async def _bm25_retrieve(
     query: str, db: AsyncSession, top_k: int = TOP_K,
     book_filter: List[str] = None,
+    user_id: Optional[uuid.UUID] = None,
 ) -> List[Tuple[str, float, dict]]:
     """BM25 关键词检索（jieba 分词 + rank_bm25）"""
     import jieba
     from rank_bm25 import BM25Okapi
 
     # 1. 从数据库加载候选文档（支持书籍过滤）
-    if book_filter:
+    if book_filter and user_id:
+        sql = text(
+            "SELECT content, metadata FROM documents "
+            "WHERE user_id = CAST(:user_id AS uuid) "
+            "AND metadata->>'filename' = ANY(:filenames)"
+        )
+        result = await db.execute(
+            sql,
+            {"filenames": book_filter, "user_id": str(user_id)},
+        )
+    elif book_filter:
         sql = text(
             "SELECT content, metadata FROM documents "
             "WHERE metadata->>'filename' = ANY(:filenames)"
         )
         result = await db.execute(sql, {"filenames": book_filter})
+    elif user_id:
+        sql = text(
+            "SELECT content, metadata FROM documents "
+            "WHERE user_id = CAST(:user_id AS uuid)"
+        )
+        result = await db.execute(sql, {"user_id": str(user_id)})
     else:
         sql = text("SELECT content, metadata FROM documents")
         result = await db.execute(sql)
@@ -290,6 +341,7 @@ async def retrieve_relevant_chunks(
     diary_content: str = None,
     top_k: int = TOP_K,
     book_filter: List[str] = None,
+    user_id: Optional[uuid.UUID] = None,
 ) -> List[Tuple[str, float, dict]]:
     """
     混合检索主入口：
@@ -306,17 +358,35 @@ async def retrieve_relevant_chunks(
     retrieval_paths = []
 
     # 路径 1: 向量检索 - 用户提问
-    vector_question = await _vector_retrieve(query, db, top_k=top_k * 2, book_filter=book_filter)
+    vector_question = await _vector_retrieve(
+        query,
+        db,
+        top_k=top_k * 2,
+        book_filter=book_filter,
+        user_id=user_id,
+    )
     retrieval_paths.append(vector_question)
 
     # 路径 2: 向量检索 - 日记内容（如果有）
     if diary_content and diary_content.strip():
         diary_query = diary_content.strip()[:500]
-        vector_diary = await _vector_retrieve(diary_query, db, top_k=top_k * 2, book_filter=book_filter)
+        vector_diary = await _vector_retrieve(
+            diary_query,
+            db,
+            top_k=top_k * 2,
+            book_filter=book_filter,
+            user_id=user_id,
+        )
         retrieval_paths.append(vector_diary)
 
     # 路径 3: BM25 关键词检索 - 用户提问
-    bm25_results = await _bm25_retrieve(query, db, top_k=top_k * 2, book_filter=book_filter)
+    bm25_results = await _bm25_retrieve(
+        query,
+        db,
+        top_k=top_k * 2,
+        book_filter=book_filter,
+        user_id=user_id,
+    )
     retrieval_paths.append(bm25_results)
 
     # RRF 融合所有路径

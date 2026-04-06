@@ -10,6 +10,7 @@
 import os
 import tempfile
 import shutil
+import uuid
 from typing import List, Dict, Any, Tuple
 
 from fastapi import UploadFile
@@ -294,7 +295,9 @@ def _chunk_text_semantic(full_text: str) -> List[Dict[str, Any]]:
 # ==========================================
 
 async def process_uploaded_file(
-    file: UploadFile, db: AsyncSession
+    file: UploadFile,
+    db: AsyncSession,
+    user_id: uuid.UUID,
 ) -> Dict[str, Any]:
     """
     完整的文件处理管线（v2 - 两级切块）：
@@ -368,6 +371,7 @@ async def process_uploaded_file(
                 metadata.update(chunk_info["metadata"])
 
             doc = Document(
+                user_id=user_id,
                 content=chunk_info["content"],
                 metadata_=metadata,
                 embedding=embedding,

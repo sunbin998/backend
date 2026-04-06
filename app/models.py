@@ -4,19 +4,44 @@ from datetime import datetime
 from typing import List, Optional, Dict, Any
 
 from sqlmodel import Field, Relationship, SQLModel
-from sqlalchemy import Column, DateTime, func
+from sqlalchemy import Column, DateTime, func, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB  # 用于存储 JSON
 from pgvector.sqlalchemy import Vector  # 用于存储向量
+
+
+class User(SQLModel, table=True):
+    __tablename__ = "users"
+
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    username: str = Field(unique=True, index=True, max_length=50)
+    email: Optional[str] = Field(default=None, unique=True, max_length=100)
+    hashed_password: str = Field(max_length=255)
+    avatar: Optional[str] = Field(default=None, max_length=500)
+
+    created_at: datetime = Field(
+        sa_column=Column(DateTime(timezone=True), server_default=func.now())
+    )
+    updated_at: datetime = Field(
+        sa_column=Column(
+            DateTime(timezone=True),
+            server_default=func.now(),
+            onupdate=func.now(),
+        )
+    )
 
 # ==========================================
 # 1. 分类模型 (Category)
 # ==========================================
 class Category(SQLModel, table=True):
     __tablename__ = "categories" # 显式指定表名，好习惯
+    __table_args__ = (
+        UniqueConstraint("user_id", "name", name="uq_categories_user_name"),
+    )
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    # 唯一且必填的分类名称
-    name: str = Field(unique=True, index=True, max_length=50)
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id", index=True)
+    # 分类名称（用户维度唯一）
+    name: str = Field(index=True, max_length=50)
     # 用于前端展示的颜色 (如 #FF0000)
     color_code: str = Field(default="#6366f1", max_length=7)
     
@@ -37,6 +62,7 @@ class ChatSession(SQLModel, table=True):
 
     # 使用 UUID 作为主键，比自增 ID 更适合分布式和 URL 里的 ID 隐藏
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id", index=True)
     
     title: str = Field(default="新对话", max_length=255)
     
@@ -111,6 +137,7 @@ class Document(SQLModel, table=True):
     __tablename__ = "documents"
 
     id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id", index=True)
     
     # 文档切片后的具体内容
     content: str
@@ -135,11 +162,15 @@ class Document(SQLModel, table=True):
 # ==========================================
 class DiaryEntry(SQLModel, table=True):
     __tablename__ = "diary_entries"
+    __table_args__ = (
+        UniqueConstraint("user_id", "date", name="uq_diary_entries_user_date"),
+    )
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    user_id: Optional[uuid.UUID] = Field(default=None, foreign_key="users.id", index=True)
 
-    # 日期（唯一，每天只能一篇日记）
-    date: str = Field(unique=True, index=True, max_length=10)  # 格式: "2026-02-14"
+    # 日期（用户维度唯一）
+    date: str = Field(index=True, max_length=10)  # 格式: "2026-02-14"
 
     # 日记正文
     content: str
