@@ -27,6 +27,12 @@ class UserRead(BaseModel):
         from_attributes = True
 
 
+class UserUpdate(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
+
+
 class TokenPair(BaseModel):
     access_token: str
     refresh_token: str
@@ -42,6 +48,10 @@ class AuthResponse(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     refresh_token: str
+
+
+class CommonMessage(BaseModel):
+    message: str
 
 # --- Session 相关 ---
 class SessionCreate(BaseModel):

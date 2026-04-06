@@ -1,10 +1,17 @@
 # app/main.py
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 from app.database import init_db
 from app import models
 from app.api.endpoints import sessions, chat, categories, documents, diary, auth
+
+BASE_DIR = Path(__file__).resolve().parents[1]
+UPLOADS_DIR = BASE_DIR / "uploads"
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
 # 生命周期管理：应用启动时初始化数据库
 @asynccontextmanager
@@ -20,6 +27,9 @@ app = FastAPI(
     version="0.2.0",
     lifespan=lifespan,
 )
+
+app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
+app.mount("/api/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="api-uploads")
 
 # ==========================================
 # 新增：CORS 中间件配置
