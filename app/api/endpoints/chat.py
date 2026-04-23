@@ -210,9 +210,11 @@ async def send_message_stream(
     db: AsyncSession = Depends(get_session),
     current_user: User = Depends(get_current_user),
 ):
+    current_user_id = current_user.id
+
     session_stmt = select(ChatSession).where(
         ChatSession.id == message_in.session_id,
-        ChatSession.user_id == current_user.id,
+        ChatSession.user_id == current_user_id,
     )
     session = (await db.exec(session_stmt)).first()
     if not session:
@@ -243,7 +245,7 @@ async def send_message_stream(
         target_date_str = session.created_at.astimezone().date().isoformat() if session and session.created_at else date.today().isoformat()
         
         diary_statement = select(DiaryEntry).where(
-            DiaryEntry.user_id == current_user.id,
+            DiaryEntry.user_id == current_user_id,
             DiaryEntry.date == target_date_str,
         )
         diary_result = await db.exec(diary_statement)
@@ -260,7 +262,7 @@ async def send_message_stream(
             message_in.content, db,
             diary_content=today_diary,
             book_filter=message_in.book_filter,
-            user_id=current_user.id,
+            user_id=current_user_id,
         )
         sources = extract_sources(relevant_chunks)
 
@@ -285,7 +287,7 @@ async def send_message_stream(
     background_tasks.add_task(
         _trigger_memory_update_after_stream,
         message_in.session_id,
-        current_user.id,
+        current_user_id,
     )
 
     # 6. 返回流式响应

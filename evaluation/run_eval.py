@@ -3,7 +3,7 @@ import asyncio
 import os
 from pathlib import Path
 from sqlmodel import select
-from langchain_community.chat_models import ChatTongyi
+from langchain_deepseek import ChatDeepSeek
 from langchain_core.messages import HumanMessage, SystemMessage
 
 import sys
@@ -34,9 +34,11 @@ async def run_evaluation():
     dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
     
     # 2. 初始化裁判大模型
-    api_key = os.getenv("DASHSCOPE_API_KEY")
-    judge_llm = ChatTongyi(model="qwen-turbo", dashscope_api_key=api_key)
-    student_llm = ChatTongyi(model="qwen-turbo", dashscope_api_key=api_key)
+    if not os.getenv("DEEPSEEK_API_KEY"):
+        raise ValueError("缺少环境变量 DEEPSEEK_API_KEY")
+
+    judge_llm = ChatDeepSeek(model="deepseek-reasoner")
+    student_llm = ChatDeepSeek(model="deepseek-reasoner")
     
     results = []
     

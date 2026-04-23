@@ -9,6 +9,7 @@ dependencies = [
     "passlib[bcrypt]>=1.7.4",
     "python-jose[cryptography]>=3.3.0",
     "dashscope>=1.25.12",
+    "langchain-deepseek>=0.1.0",
     "langchain>=1.2.10",
     "langchain-community>=0.4.1",
     "pypdf>=5.0.0",
@@ -24,4 +25,7 @@ dependencies = [
     "asyncpg>=0.30.0",
     "pgvector>=0.3.0",
     "uvicorn>=0.30.0",
+    "langchain-experimental>=0.4.1",
+    "jieba>=0.42.1",
+    "rank-bm25>=0.2.2",
 ]

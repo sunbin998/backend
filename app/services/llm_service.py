@@ -1,20 +1,19 @@
 # backend/app/services/llm_service.py
 """
-LLM 调用服务（通义千问 qwen-turbo，流式）
+LLM 调用服务（DeepSeek deepseek-reasoner，流式）
 支持：
 - 自定义 system prompt（来自 RAG 检索结果）
 - 对话历史上下文
 """
-from langchain_community.chat_models.tongyi import ChatTongyi
+from langchain_deepseek import ChatDeepSeek
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from typing import AsyncGenerator, List, Optional
-import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-llm = ChatTongyi(
-    model="qwen-turbo",
+llm = ChatDeepSeek(
+    model="deepseek-reasoner",
     temperature=0.7,
     streaming=True,
 )
@@ -68,7 +67,7 @@ async def stream_response_via_langchain(
     history: Optional[List[dict]] = None,
 ) -> AsyncGenerator[str, None]:
     """
-    流式调用通义千问
+    流式调用 DeepSeek
 
     Args:
         prompt: 当前用户输入
