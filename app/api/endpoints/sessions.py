@@ -3,13 +3,34 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import select, desc, or_
 from typing import List, Optional
+import random
 
 from app.api.deps import get_current_user
 from app.database import get_session
-from app.models import ChatSession, Category, User
+from app.models import ChatSession, Category, User, Message
 from app.schemas import SessionCreate, SessionRead
 
 router = APIRouter()
+
+# 新建会话时自动发送首条 assistant 欢迎语（引用积极短句）
+WELCOME_QUOTES = [
+    ("世界上只有一种真正的英雄主义，就是在认清生活的真相后依然热爱生活。", "罗曼·罗兰"),
+    ("长风破浪会有时，直挂云帆济沧海。", "李白"),
+    ("既然选择了远方，便只顾风雨兼程。", "汪国真"),
+    ("我们终将上岸，阳光万里。", "《摆渡人》"),
+    ("不要慨叹生活底痛苦，慨叹是弱者。", "高尔基"),
+]
+
+
+def _build_welcome_message(username: Optional[str]) -> str:
+    """生成新会话欢迎语：积极引用 + 用户名问候。"""
+    user_name = (username or "朋友").strip() or "朋友"
+    quote, author = random.choice(WELCOME_QUOTES)
+    return (
+        f"\"{quote}\" —— {author}\n\n"
+        f"嗨，{user_name}，很高兴见到你。"
+        "你可以从今天最想聊的一件小事开始，我会认真听你说。"
+    )
 
 # 1. 创建新会话
 @router.post("", response_model=SessionRead, include_in_schema=False)
@@ -35,7 +56,16 @@ async def create_session(
         category_id=session_in.category_id,
         user_id=current_user.id,
     )
+
+    # 同步创建 assistant 首条欢迎语，确保新会话打开即可看到问候
+    welcome_msg = Message(
+        session_id=db_session.id,
+        role="assistant",
+        content=_build_welcome_message(current_user.username),
+    )
+
     db.add(db_session)
+    db.add(welcome_msg)
     await db.commit()
     await db.refresh(db_session)
     return db_session

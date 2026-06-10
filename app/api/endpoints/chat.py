@@ -272,6 +272,7 @@ async def send_message_stream(
             today_diary=today_diary,
             today_date=target_date_str,
             today_mood=today_mood,
+            user_name=current_user.username,
         )
 
         if relevant_chunks:
